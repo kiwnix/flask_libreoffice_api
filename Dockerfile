@@ -1,6 +1,6 @@
-FROM python:3.8-slim
+FROM python:3.11-bookworm
 
-RUN apt-get update && apt-get install -y libreoffice
+RUN apt-get update && apt install -y libreoffice-nogui && apt install -y wkhtmltopdf
 
 WORKDIR /app
 
@@ -17,5 +17,7 @@ COPY . .
 RUN addgroup libregroup && adduser -u 1001 --disabled-password --gecos '' --ingroup libregroup libreuser
 
 USER libreuser
+
+RUN mkdir ~/uploads
 
 CMD ["gunicorn", "-c", "gunicorn.py", "app:app"]

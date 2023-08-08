@@ -1,18 +1,6 @@
 # LibreOffice REST API
 
-This project is a Stateless REST API that exposes an endpoint for document conversion using the LibreOffice CLI.
-
-# Motivation
-
-The motivation for this project was from the issues experienced from another service I was using at work for the same purpose, it had a large memory footprint on our clusters as a result of some zombie processes thereby leading to memory leakages.
-
-Before Implementation
-![image](https://user-images.githubusercontent.com/13919080/149616920-c5c04f57-1efb-4f1d-843f-5d4a1caa08e2.png)
-
-After Implementation
-![Screen Shot 2022-01-15 at 9 47 37 AM](https://user-images.githubusercontent.com/13919080/149616946-c6fc843c-af1c-48b8-adf0-fadd22ebd50f.png)
-
-😇
+Basado en https://github.com/jesseinit/flask_libreoffice_api
 
 # Getting Started
 
@@ -26,12 +14,17 @@ There are three endpoint exposed on the project and they are as follows
 
 - GET `/health` - Returns a message on how so uppp we are..lol
 - GET `/` - Returns a greeting message..hehe
-- POST `/forms/libreoffice/convert` - Takes a multipart form request and returns the converted file.
+- POST `/utils/libreoffice/convert-xlsx-to-pdf` - Takes a multipart form request and returns the converted file directly converted to pdf by libreoffice (only xlsx)
+- POST `/utils/libreoffice/convert-to-embhtml` - Takes a multipart form request and returns the converted file converted by libreoffice and embedding the images (base64 datalinks), using BeautifulSoup
+- POST `/utils/libreoffice/convert-to-embpdf` - Takes a multipart form request and returns the converted file converted to html, embedding the images and converting to pdf using pdfkit/wkhtmltopdf. it accepts a parameter pagesize= to specify a pagesize (A4,A0,Letter, etc (passed as option to wkhtmltopdf))
 
-  Example Request
+
+  Example Requests
 
   ```curl
-  curl --location --request POST 'http://0.0.0.0:3000/forms/libreoffice/convert' --form 'files=@"/Users/jesseinit/Downloads/DesignProcessWorkshopbySlidesgo.pptx"'
+  curl --location --request POST 'http://127.0.0.1:3000/utils/libreoffice/convert-to-embpdf?pagesize=A4' --form 'files=@1.xlsx' -o 1.pdf
+
+  curl --location --request POST 'http://127.0.0.1:3000/utils/libreoffice/convert-to-embhtml' --form 'files=@1.xlsx' -o 1.html
   ```
 
 ## Todo
